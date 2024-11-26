@@ -130,9 +130,7 @@ namespace marketplace.Presentation.Actions.SingIn
                         Console.ReadKey();
                         return;
                     }
-                }
-
-                
+                }   
             }
             Console.WriteLine($"Registracija uspjesno napravljena.\nKreiran kupac:{registrationName}   {registrationEmail}   {registrationBalance}");
             Console.ReadKey();

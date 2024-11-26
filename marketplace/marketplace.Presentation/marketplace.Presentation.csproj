@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\BuyerMenu\BuyerMenuActions.cs" />
     <Compile Include="Actions\Login\LoginActions.cs" />
+    <Compile Include="Actions\SellerMenu\SellerMenuActions.cs" />
     <Compile Include="Actions\SingIn\SignInActions.cs" />
     <Compile Include="Helper\ChecksIfInputIsValid.cs" />
     <Compile Include="Program.cs" />

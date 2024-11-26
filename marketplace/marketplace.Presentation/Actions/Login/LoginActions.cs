@@ -79,15 +79,13 @@ namespace marketplace.Presentation.Actions.Login
             if (checkRoleOfUser == "buyer")
             {
                 Console.WriteLine($"Uspjesno ste se logirali kao kupac.");
-                //pozvat meni i funkcije valjda od kupca
-                Console.ReadKey();
+                Presentation.Actions.BuyerMenu.BuyerMenuActions.MenuForBuyer(loginEmail);
                 return;
             }
             else
             {
                 Console.WriteLine("Uspjesno ste se logirali kao prodavac.");
-                //pozvat meni i funkcije valjda od prodavca
-                Console.ReadKey();
+                Presentation.Actions.SellerMenu.SellerMenuActions.MenuForSeller(loginEmail);
                 return;
             }
         }

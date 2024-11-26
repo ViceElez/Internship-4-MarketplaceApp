@@ -11,10 +11,30 @@ namespace marketplace.Domain.Repsositories
 {
     public class BuyerRepository
     {
+        public static string FindingBuyerByEmail(string buyerEmail)
+        {
+            var foundBuyer = false;
+            foreach (buyer buyer in Seed.Buyers)
+            {
+                if (buyer.Email == buyerEmail)
+                {
+                    foundBuyer = true;
+                    return buyer.Name;
+                }
+            }
+            if (!foundBuyer)
+            {
+                return null;
+            }
+            else
+            {
+                return null;
+            }
+        }
         public static void AddBuyer(string buyerName, string buyerEmail, float buyerBalance)
         {
-            buyer buyer = new buyer(buyerName, buyerEmail, buyerBalance);
-            Seed.Buyers.Add(buyer);
+            buyer newBuyer = new buyer(buyerName, buyerEmail, buyerBalance);
+            Seed.Buyers.Add(newBuyer);
         }
     }
 }
