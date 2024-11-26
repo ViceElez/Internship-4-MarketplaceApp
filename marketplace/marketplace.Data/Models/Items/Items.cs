@@ -39,7 +39,7 @@ namespace marketplace.Data.Models.Items
                 }
                 else
                 {
-                    Console.WriteLine("Proces kreiranja je zavrsio.");
+                    Console.WriteLine("Proces kreiranja je prekinut.");
                     Console.ReadKey();
                     return;
                 }
@@ -58,7 +58,7 @@ namespace marketplace.Data.Models.Items
                 }
                 else
                 {
-                    Console.WriteLine("Proces kreiranja je zavrsio.");
+                    Console.WriteLine("Proces kreiranja je prekinut.");
                     Console.ReadKey();
                     return;
                 }
@@ -76,7 +76,7 @@ namespace marketplace.Data.Models.Items
                 }
                 else
                 {
-                    Console.WriteLine("Proces kreiranja je zavrsio.");
+                    Console.WriteLine("Proces kreiranja je prekinut.");
                     Console.ReadKey();
                     return;
                 }

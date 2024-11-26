@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+    
 namespace marketplace.Data.Seed
 {
     public static class Seed
@@ -29,7 +29,7 @@ namespace marketplace.Data.Seed
             new Models.Items.Items("Telefon", "Pametan telefon sa svim funkcijama", 3000, "na prodaju", "Tehnika", Sellers[1], 4.2f),
             new Models.Items.Items("Stol", "Elegantni stol za dnevni boravak", 1500, "na prodaju", "Namještaj", Sellers[2], 4.8f),
             new Models.Items.Items("Knjiga", "Zanimljiv roman za ljubitelje misterije", 200, "na prodaju", "Knjige", Sellers[3], 4.0f),
-            new Models.Items.Items("Slikarska oprema", "Komplet za slikare", 450, "na prodaju", "Umjetnost", Sellers[4], 4.7f)
+            new Models.Items.Items("Slikarska oprema", "Komplet za slikare", 450, "na prodaju", "Umjetnost", Sellers[2], 4.7f)
         };
 
         public static readonly List<Models.Transactions.Transactions> Transactions = new List<Models.Transactions.Transactions> { 

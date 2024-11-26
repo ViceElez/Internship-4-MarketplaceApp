@@ -27,19 +27,40 @@ namespace marketplace.Presentation
                 switch(choice)
                 {
                     case 1:
-                        Console.WriteLine("Unesite login ime:");
-                        
-                        Console.ReadKey();
+                        Presentation.Actions.Login.LoginActions.Login();
                         break;
                     case 2:
-                        Console.WriteLine("Unesite korisnicko ime:");
-                        Console.ReadKey();
+                        var registrationMenu = true;
+                        while (registrationMenu)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Kako se zelite registrirati:\n1 - Kupac\n2 - Prodavac\n3 - Povratak");
+                            Console.Write("Vas odabir:");
+                            var inputForRegistration = int.TryParse(Console.ReadLine(), out int choiceForRegistration);
+                            switch (choiceForRegistration)
+                            {
+                                case 1:
+                                    Presentation.Actions.SingIn.SignInActions.SignInBuyer();
+                                    break;
+                                case 2:
+                                    Presentation.Actions.SingIn.SignInActions.SignInSeller();
+                                    break;
+                                case 3:
+                                    registrationMenu = false;
+                                    break;
+                                default:
+                                    Console.WriteLine("Pogresan unos.");
+                                    Console.ReadKey();
+                                    break;
+                            }   
+                        }
                         break;
                     case 3:
                         menuForLoginAndRegistration = false;
                         break;
                     default:
                         Console.WriteLine("Pogresan unos.");
+                        Console.ReadKey();
                         break;
                 }
 

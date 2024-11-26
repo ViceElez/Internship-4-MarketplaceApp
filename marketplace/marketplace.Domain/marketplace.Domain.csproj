@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repsositories\BuyerRepository.cs" />
+    <Compile Include="Repsositories\CheckingForInputs.cs" />
     <Compile Include="Repsositories\SellerRepositories.cs" />
   </ItemGroup>
   <ItemGroup>

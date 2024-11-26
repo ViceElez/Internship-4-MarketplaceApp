@@ -17,8 +17,9 @@ namespace marketplace.Data.Models.Users
             Products = new List<Items.Items>();
         }
 
-        public seller()
+        public seller(string name, string email):base(name,email)
         {
+
             currentProfit = 0;
             Products = new List<Items.Items>();
         }

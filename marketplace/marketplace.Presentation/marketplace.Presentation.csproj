@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Actions\Login\LoginActions.cs" />
     <Compile Include="Actions\SingIn\SignInActions.cs" />
+    <Compile Include="Helper\ChecksIfInputIsValid.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

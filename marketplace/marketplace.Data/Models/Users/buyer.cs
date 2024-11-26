@@ -19,52 +19,6 @@ namespace marketplace.Data.Models.Users
             ItemsBought = new List<Items.Items>();
             FavouriteItems = new List<Items.Items>();
         }
-        public buyer():base()
-        {
-            Console.Write("Upisite iznos koji zelite da vam bude na racunu:");
-            var inputForCurrentBalance = float.TryParse(Console.ReadLine(),out var balance);
-            while (true)
-            {
-                if (inputForCurrentBalance && balance>=0 )
-                {
-                    currentBalance = balance;
-                    break;
-                }
-                else if (balance < 0)
-                {
-                    Console.WriteLine("Molimo vas unesite pozitivan iznos.");
-                    var confirmForBalance = ConfirmAndDelete();
-                    if (confirmForBalance)
-                    {
-                        Console.Write("Upisite iznos koji zelite da vam bude na racunu:");
-                        inputForCurrentBalance = float.TryParse(Console.ReadLine(), out balance);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Proces kreiranja je zavrsio.");
-                        Console.ReadKey();
-                        return;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Molimo vas unesite brojcanu vrijednost.");
-                    var confirmForBalance = ConfirmAndDelete();
-                    if (confirmForBalance)
-                    {
-                        Console.Write("Upisite iznos koji zelite da vam bude na racunu:");
-                        inputForCurrentBalance = float.TryParse(Console.ReadLine(), out balance);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Proces kreiranja je zavrsio.");
-                        Console.ReadKey();
-                        return;
-                    }
-                }
-            }
-            ItemsBought = new List<Items.Items>();
-            FavouriteItems = new List<Items.Items>();
-        }
+        
     }
 }
