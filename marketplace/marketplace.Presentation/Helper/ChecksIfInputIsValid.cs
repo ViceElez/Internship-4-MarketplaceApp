@@ -35,7 +35,7 @@ namespace marketplace.Presentation.Helper
 
         public static bool IsValid(string email)
         {
-            string regex = @"^[^@\s]+@[^@\s]+\.(com|net|org|gov)$";
+            string regex = @"^[^@\s]+@[^@\s]+\.[a-zA-Z]$";
 
             return Regex.IsMatch(email, regex, RegexOptions.IgnoreCase);
         }

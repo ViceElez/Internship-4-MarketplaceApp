@@ -9,7 +9,7 @@ namespace marketplace.Data.Models.Transactions
 {
     public class Transactions
     {
-        public Guid IdOfTransaction { get; set; }
+        public Guid IdOfItem { get; set; }
         public Guid TransactionSellerID { get; set; }
         public Guid TransactionBuyerID { get; set; }
         public DateTime DateOfTransaction { get; set; }
@@ -17,10 +17,19 @@ namespace marketplace.Data.Models.Transactions
 
         public Transactions(Guid sellerID, Guid buyerID, float amount)
         {
-            IdOfTransaction = Guid.NewGuid();
+            IdOfItem = Guid.NewGuid();
             TransactionSellerID = sellerID;
             TransactionBuyerID = buyerID;
             DateOfTransaction = DateTime.Now;
+            Amount = amount;
+        }
+
+        public Transactions(Guid idOfItem, Guid sellerID, Guid buyerID, DateTime dateOfTransaction, float amount)
+        {
+            IdOfItem = idOfItem;
+            TransactionSellerID = sellerID;
+            TransactionBuyerID = buyerID;
+            DateOfTransaction = dateOfTransaction;
             Amount = amount;
         }
     }

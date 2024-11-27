@@ -35,14 +35,17 @@ namespace marketplace.Presentation.Actions.SellerMenu
                         }
                     case 3:
                         {
+                            TotalProfit(emailOfLoggedUser);
                             break;
                         }
                     case 4:
                         {
+                            ListingProductsByDesiredCategory(emailOfLoggedUser);
                             break;
                         }
                     case 5:
                         {
+                            ProfitInCertainTime(emailOfLoggedUser);
                             break;
                         }
                     case 6:
@@ -181,6 +184,143 @@ namespace marketplace.Presentation.Actions.SellerMenu
             Console.Clear();
             Domain.Repsositories.SellerRepositories.ViewAllProductsInPossesion(sellerEmail);
         }
-            
+
+        public static void TotalProfit(string sellerEmail)
+        {
+            Console.Clear();
+            var sellersProfit = Domain.Repsositories.SellerRepositories.TotalProfitForSeller(sellerEmail);
+            if(sellersProfit<0)
+                Console.WriteLine("Lista proizvoda je prazna");
+            else
+                Console.WriteLine($"Totalna zarada je: {sellersProfit}");
+            Console.ReadKey();  
+        }
+
+        public static void ListingProductsByDesiredCategory(string sellerEmail) //nenzna jel 100% radi dok ne napravin kupca pa vidin stase desi ako se minja status proizvoda usrid koda
+        {
+            Console.Clear();
+            string desiredCategory=string.Empty;
+            if (Domain.Repsositories.SellerRepositories.CheckIfListOfProductsIsEmpty(sellerEmail))
+            {
+                Console.WriteLine("Prodavac nema proizvoda.");
+                return;
+            }
+            else
+            {
+                if (Domain.Repsositories.SellerRepositories.CheckIfStatusSoldForCategoryIsEmpty(sellerEmail)){
+                    Console.WriteLine("Nema prodanih proizvoda");
+                }
+                Domain.Repsositories.SellerRepositories.ListAllCategoriesOfProducts(sellerEmail);
+                Console.Write("Upisite za koju kategoriju zelite vidjeti proizvode: ");
+                desiredCategory = Console.ReadLine();
+                while (true)
+                {
+                    Console.Clear();
+                    Domain.Repsositories.SellerRepositories.ListAllCategoriesOfProducts(sellerEmail);
+                    if (string.IsNullOrEmpty(desiredCategory))
+                    {
+                        Console.WriteLine("Odabrana kategorija nemoze biti prazna:");
+                        var confirmForCategory = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForCategory)
+                        {
+                            Console.Write("Upisite za koju kategorij zelite vidjeti proizvode: ");
+                            desiredCategory = Console.ReadLine().Trim();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ispisvanje proizvoda po kategoriji je prekinuto.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                    else if (!Domain.Repsositories.SellerRepositories.CheckIfInputedCategoryExisist(sellerEmail, desiredCategory))
+                    {
+                        Console.WriteLine("Odabrana kategorija nije na listi:");
+                        var confirmForCategory = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForCategory)
+                        {
+                            Console.Write("Upisite za koju kategoriju zelite vidjeti proizvode: ");
+                            desiredCategory = Console.ReadLine().Trim();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ispisvanje proizvoda po kategoriji je prekinuto");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+
+                    else
+                        break;
+                }
+            }
+
+            Domain.Repsositories.SellerRepositories.ListAllProductsByDesiredCategory(sellerEmail, desiredCategory);
+        }
+
+        public static void ProfitInCertainTime(string sellerEmail)
+        {
+            Console.Clear();
+            if (Domain.Repsositories.SellerRepositories.CheckIfListOfProductsIsEmpty(sellerEmail))
+            {
+                Console.WriteLine("Prodavac nema proizvoda.");
+                return;
+            }
+            else
+            {
+                Console.WriteLine("Upisite datum od i do kada zelite vidjeti zaradu:");
+                Console.Write("Datum od(dd/mm/yyyy):");
+                var inputForDateFrom = DateTime.TryParse(Console.ReadLine(), out DateTime dateFrom);
+                while (true)
+                {
+                    if (inputForDateFrom)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Molimo vas unesite datum u formatu dd/mm/yyyy");
+                        var confirmForDateFrom = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForDateFrom)
+                        {
+                            Console.Write("Datum od:");
+                            inputForDateFrom = DateTime.TryParse(Console.ReadLine(), out dateFrom);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces pregleda zarade u odredenom vremenskom razdoblju je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                }
+                Console.Write("Datum do(dd/mm/yyyy):");
+                var inputForDateTo = DateTime.TryParse(Console.ReadLine(), out DateTime dateTo);
+                while (true)
+                {
+                    if (inputForDateTo)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Molimo vas unesite datum u formatu dd/mm/yyyy");
+                        var confirmForDateTo = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForDateTo)
+                        {
+                            Console.Write("Datum do:");
+                            inputForDateTo = DateTime.TryParse(Console.ReadLine(), out dateTo);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces pregleda zarade u odredenom vremenskom razdoblju je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                }
+                Domain.Repsositories.SellerRepositories.ProfitInCertainTime(sellerEmail, dateFrom, dateTo);
+            }
+        }//triba vidit i jel ovo radi kad se minja status proizvoda usrid koda
     }
 }
