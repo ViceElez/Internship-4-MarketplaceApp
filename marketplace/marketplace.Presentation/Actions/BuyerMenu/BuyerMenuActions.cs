@@ -9,6 +9,8 @@ namespace marketplace.Presentation.Actions.BuyerMenu
 {
     public class BuyerMenuActions
     {
+        //isporbaj jos s kuponima sve
+       
         public static void MenuForBuyer(string emailOfLoggedUser)
         {
             var nameOfLoggedUser = BuyerRepository.FindingBuyerByEmail(emailOfLoggedUser);
@@ -210,10 +212,10 @@ namespace marketplace.Presentation.Actions.BuyerMenu
         public static void ListAllBuyersProducts(string emailOfLoggedUser)
         {
             Console.Clear();
-            if (Domain.Repsositories.BuyerRepository.DoesBuyerHaveProducts(emailOfLoggedUser))
+            if (Domain.Repsositories.BuyerRepository.IsHistoryOfBoughtItemsEmpty(emailOfLoggedUser))
             {
-                Console.WriteLine("Lista kupljenih proizvoda:");
-                Domain.Repsositories.BuyerRepository.ListAllBuyersProducts(emailOfLoggedUser);
+                Console.WriteLine("Lista svih kupljenih proizvoda:");
+                Domain.Repsositories.BuyerRepository.ListAllBuyersProductsHistory(emailOfLoggedUser);
                 Console.ReadKey();
             }
             else

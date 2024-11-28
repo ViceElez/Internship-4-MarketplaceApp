@@ -96,7 +96,7 @@ namespace marketplace.Domain.Repsositories
         public static void BuyingProduct(string emailOfLoggedUser, Guid idOfLookingItem)
         {
             var foundProduct = false;
-            foreach (var seller in Seed.Sellers) //provjri jel radi 
+            foreach (var seller in Seed.Sellers)  
             {
                 foreach (var item in seller.Products)
                 {
@@ -124,9 +124,11 @@ namespace marketplace.Domain.Repsositories
                                                 Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance -= payment;
                                                 seller.currentProfit += payment * 0.95;
                                                 Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ItemsBought.Add(item);
+                                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).HistoryOfItemsBought.Add(item);
                                                 Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).Coupons.Remove(coupon);
                                                 item.Status = "prodano";
-                                                Transactions newTransactionWithCoupon = new Transactions(idOfLookingItem, seller.ID, Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, payment);
+                                                Transactions newTransactionWithCoupon = new Transactions(idOfLookingItem, seller.ID, 
+                                                    Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, payment);
                                                 Seed.Transactions.Add(newTransactionWithCoupon);
                                                 Console.WriteLine("Proizvod je uspjesno kupljen.");
                                                 Console.ReadKey();
@@ -144,6 +146,7 @@ namespace marketplace.Domain.Repsositories
                                         Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance -= item.Price;
                                         seller.currentProfit += item.Price * 0.95;
                                         Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ItemsBought.Add(item);
+                                        Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).HistoryOfItemsBought.Add(item);
                                         item.Status = "prodano";
                                         Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, item.Price);
                                         Seed.Transactions.Add(newTransaction);
@@ -162,6 +165,7 @@ namespace marketplace.Domain.Repsositories
                                 Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance -= item.Price;
                                 seller.currentProfit += item.Price * 0.95;
                                 Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ItemsBought.Add(item);
+                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).HistoryOfItemsBought.Add(item);
                                 item.Status = "prodano";
                                 Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, item.Price);
                                 Seed.Transactions.Add(newTransaction);
@@ -231,11 +235,11 @@ namespace marketplace.Domain.Repsositories
                             foundProduct = true;
                             var transactionToRemove = Seed.Transactions.FirstOrDefault(
                              t => t.IdOfItem == idOfLookingItem && t.TransactionBuyerID == buyer.ID);
-                            buyer.currentBalance += transactionToRemove.Amount;
+                            buyer.currentBalance += transactionToRemove.Amount*0.8;
                             item.Status = "na prodaju";
                             buyer.ItemsBought.Remove(item);
                             var seller = Seed.Sellers.Find(s => s.ID == item.SellerOfItem.ID);
-                            seller.currentProfit -= transactionToRemove.Amount * 0.95;
+                            seller.currentProfit -= transactionToRemove.Amount * 0.85;
 
                             if (transactionToRemove != null)
                             {
@@ -280,17 +284,25 @@ namespace marketplace.Domain.Repsositories
 
         public static void ListAllFavouriteProducts(string emailOfLoggedUser)
         {
+            var foundProduct = false;
             foreach (var buyer in Seed.Buyers)
             {
                 if (buyer.Email == emailOfLoggedUser)
                 {
                     foreach (var item in buyer.FavouriteItems)
                     {
+                        foundProduct = true;
                         Console.WriteLine($"Id proizvoda:{item.Id}\nIme proizvoda: {item.Name}\n" +
                        $"Cijena: {item.Price}\nOpis: {item.Description}\n");
                         Console.WriteLine();
                     }
                 }
+            }
+
+            if (!foundProduct)
+            {
+                Console.WriteLine("Nepostoji proizvod s tim ID-om u listi favorita.");
+                Console.ReadKey();
             }
         }
 
@@ -331,6 +343,37 @@ namespace marketplace.Domain.Repsositories
             Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).Coupons.Add(Seed.Coupons[randomNumber]);
             Console.WriteLine("Dobili ste kupon.");
             Console.ReadKey();
+        }
+
+        public static bool IsHistoryOfBoughtItemsEmpty(string emailOfLoggedUser)
+        {
+            foreach (var buyer in Seed.Buyers)
+            {
+                if (buyer.Email == emailOfLoggedUser)
+                {
+                    foreach (var item in buyer.HistoryOfItemsBought)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static void ListAllBuyersProductsHistory(string emailOfLoggedUser)
+        {
+            foreach (var buyer in Seed.Buyers)
+            {
+                if (buyer.Email == emailOfLoggedUser)
+                {
+                    foreach (var item in buyer.HistoryOfItemsBought)
+                    {
+                        Console.WriteLine($"Id proizvoda:{item.Id}\nIme proizvoda: {item.Name}\n" +
+                       $"Cijena: {item.Price}\nOpis: {item.Description}\n");
+                        Console.WriteLine();
+                    }
+                }
+            }
         }
     } 
 }

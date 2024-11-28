@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Coupons\Coupons.cs" />
     <Compile Include="Models\Items\Items.cs" />
     <Compile Include="Models\Transactions\Transactions.cs" />
     <Compile Include="Models\Users\buyer.cs" />

@@ -18,7 +18,8 @@ namespace marketplace.Presentation.Actions.SellerMenu
                 Console.Clear();
                 Console.WriteLine($"\t\t Dobrodosli {nameOfLoggedUser}\n\n");
                 Console.WriteLine("1 - Dodavanje proizvoda\n2 - Pregled svih proizvoda u vlasnistvu\n3 - Pregled ukupne zarade\n" +
-                    "4 - Pregled prodanih proizvoda po kategoriji\n5 - Pregled zarade u odredenom vremenskom razdoblju\n6 - Izlazak s racuna");
+                    "4 - Pregled prodanih proizvoda po kategoriji\n5 - Pregled zarade u odredenom vremenskom razdoblju\n" +
+                    "6 - Mjenjanje cijene proizvoda\n7 - Izlazak s racuna");
                 Console.Write("Vas odabir:");
                 var validInputForMenu = int.TryParse(Console.ReadLine(), out int choiceForSeller);
                 switch (choiceForSeller)
@@ -49,6 +50,10 @@ namespace marketplace.Presentation.Actions.SellerMenu
                             break;
                         }
                     case 6:
+                        {ChangePriceOfProduct(emailOfLoggedUser);
+                            break;
+                        }
+                    case 7:
                         {
                             menuForSeller = false;
                             break;
@@ -165,23 +170,24 @@ namespace marketplace.Presentation.Actions.SellerMenu
         {
             Console.Clear();
             Domain.Repsositories.SellerRepositories.ViewAllProductsInPossesion(sellerEmail);
+            Console.ReadKey();
         }
 
         public static void TotalProfit(string sellerEmail)
         {
             Console.Clear();
             var sellersProfit = Domain.Repsositories.SellerRepositories.TotalProfitForSeller(sellerEmail);
-            if(sellersProfit<0)
+            if (sellersProfit < 0)
                 Console.WriteLine("Lista proizvoda je prazna");
             else
-                Console.WriteLine($"Totalna zarada je: {Math.Round(sellersProfit,2)}");
-            Console.ReadKey();  
+                Console.WriteLine($"Totalna zarada je: {Math.Round(sellersProfit, 2)}");
+            Console.ReadKey();
         }
 
-        public static void ListingProductsByDesiredCategory(string sellerEmail) //nenzna jel 100% radi dok ne napravin kupca pa vidin stase desi ako se minja status proizvoda usrid koda
+        public static void ListingProductsByDesiredCategory(string sellerEmail)
         {
             Console.Clear();
-            string desiredCategory=string.Empty;
+            string desiredCategory = string.Empty;
             if (Domain.Repsositories.SellerRepositories.CheckIfListOfProductsIsEmpty(sellerEmail))
             {
                 Console.WriteLine("Prodavac nema proizvoda.");
@@ -189,7 +195,8 @@ namespace marketplace.Presentation.Actions.SellerMenu
             }
             else
             {
-                if (Domain.Repsositories.SellerRepositories.CheckIfStatusSoldForCategoryIsEmpty(sellerEmail)){
+                if (Domain.Repsositories.SellerRepositories.CheckIfStatusSoldForCategoryIsEmpty(sellerEmail))
+                {
                     Console.WriteLine("Nema prodanih proizvoda");
                     Console.ReadKey();
                     return;
@@ -305,6 +312,91 @@ namespace marketplace.Presentation.Actions.SellerMenu
                 }
                 Domain.Repsositories.SellerRepositories.ProfitInCertainTime(sellerEmail, dateFrom, dateTo);
             }
-        }//triba vidit i jel ovo radi kad se minja status proizvoda usrid koda
+        }//nezeli radit
+
+        public static void ChangePriceOfProduct(string sellerEmail)
+        {
+            Console.Clear();
+            var idOfProduct = Guid.Empty;
+            var newPrice = 0.00d;
+            if (Domain.Repsositories.SellerRepositories.CheckIfListOfProductsIsEmpty(sellerEmail))
+            {
+                Console.WriteLine("Prodavac nema proizvoda.");
+                Console.ReadKey();
+                return;
+            }
+            else
+            {
+                Domain.Repsositories.SellerRepositories.ViewAllProductsInPossesion(sellerEmail);
+                Console.Write("Upisite ID proizvoda kojem zelite zamijeniti cijenu:");
+                var validInputForId = Guid.TryParse(Console.ReadLine(), out  idOfProduct);
+                while (true)
+                {
+                    if (validInputForId)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Molimo vas unesite ispravan ID proizvoda.");
+                        var confirmForId = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForId)
+                        {
+                            Console.Write("Upisite ID proizvoda kojem zelite zamijeniti cijenu:");
+                            validInputForId = Guid.TryParse(Console.ReadLine(), out idOfProduct);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces zamjene cijene proizvoda je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                }
+
+                Console.Write("Upisite novu cijenu prozivoda:");
+                var inputForPrice = double.TryParse(Console.ReadLine(), out  newPrice);
+                while (true)
+                {
+                    if (newPrice >= 0 && inputForPrice)
+                    {
+                        break;
+                    }
+                    else if (newPrice < 0)
+                    {
+                        Console.WriteLine("Molimo vas unesite pozitivan iznos.");
+                        var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForBalance)
+                        {
+                            Console.Write("Upisite novu cijenu proizvoda:");
+                            inputForPrice = double.TryParse(Console.ReadLine(), out newPrice);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces zamjene cijene proizvoda je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Molimo vas unesite brojcanu vrijednost.");
+                        var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForBalance)
+                        {
+                            Console.Write("Upisite novu cijenu proizvoda:");
+                            inputForPrice = double.TryParse(Console.ReadLine(), out newPrice);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces zamjene cijene proizvoda je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                }
+            }
+            Domain.Repsositories.SellerRepositories.ChangePriceOfProduct(sellerEmail,idOfProduct,newPrice);
+        }
     }
 }

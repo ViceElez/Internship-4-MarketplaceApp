@@ -41,7 +41,7 @@ namespace marketplace.Data.Seed
         public static readonly List<Models.Coupons.Coupons> Coupons = new List<Models.Coupons.Coupons>()
         {
             new Coupons("Elektronika", 10.0, new DateTime(2024, 12, 31)), 
-            new Coupons("Namještaj", 15.0, new DateTime(2024, 11, 30)),   
+            new Coupons("Namjestaj", 15.0, new DateTime(2024, 11, 30)),   
             new Coupons("Aparati", 20.0, new DateTime(2025, 1, 15)),      
             new Coupons("Namirnice", 5.0, new DateTime(2024, 12, 25)),    
             new Coupons("Odjeća", 25.0, new DateTime(2024, 11, 30))

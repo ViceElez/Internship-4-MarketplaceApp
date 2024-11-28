@@ -16,7 +16,6 @@ namespace marketplace.Data.Models.Items
         public string Status { get; set; }
         public string Category { get; set; }
         public seller SellerOfItem { get; set; }
-        public float Rating { get; set; }
 
         public Items(string name,string description,double price, string category, seller seller)
         {
@@ -27,7 +26,6 @@ namespace marketplace.Data.Models.Items
             Status = "na prodaju";
             Category = category;
             SellerOfItem = seller;
-            Rating = 0.00f;
         }
     }
 }

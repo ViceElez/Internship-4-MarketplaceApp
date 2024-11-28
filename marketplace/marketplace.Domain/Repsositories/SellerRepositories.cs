@@ -47,7 +47,7 @@ namespace marketplace.Domain.Repsositories
             Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail).Products.Add(newItem);
             Seed.Items.Add(newItem);
             Console.WriteLine("Uspjesno dodan novi proizvod:");
-            Console.WriteLine($"{prdouctName} {productDescription} {newItem.Status} {Math.Round(productPrice,2)} {productCategory} {newItem.SellerOfItem.Name} {newItem.Rating} ");
+            Console.WriteLine($"{prdouctName} {productDescription}  {Math.Round(productPrice,2)}  {productCategory} {newItem.SellerOfItem.Name} ");
             Console.ReadKey();
         }
 
@@ -61,8 +61,8 @@ namespace marketplace.Domain.Repsositories
                     foreach (var item in seller.Products)
                     {
                         foundItems = true;
-                        Console.WriteLine($"Ime proizvoda:{item.Name}\nOpis proizvoda:{item.Description}\nCijena proizvoda:{item.Price}\n" +
-                            $"Status proizvoda: {item.Status}\nKategorija proizvoda:{item.Category}\nRating proizvoda:{item.Rating}");
+                        Console.WriteLine($"Id proizvoda:{item.Id}\nIme proizvoda:{item.Name}\nOpis proizvoda:{item.Description}\nCijena proizvoda:{item.Price}\n" +
+                            $"Status proizvoda: {item.Status}\nKategorija proizvoda:{item.Category}\n");
                         Console.WriteLine();
                     }
                 }
@@ -70,10 +70,8 @@ namespace marketplace.Domain.Repsositories
             if(!foundItems)
             {
                 Console.WriteLine("Nemate proizvoda u posjedu.");
-                Console.ReadKey();
                 return;
             }
-            Console.ReadKey();
 
         }
 
@@ -105,7 +103,8 @@ namespace marketplace.Domain.Repsositories
                     foreach(var item in seller.Products)
                     {
                         if(item.Category.ToLower().Trim() == inputedCategory.ToLower().Trim() && item.Status == "prodano")
-                        Console.WriteLine($"{item.Name} {item.Description} {item.Price} {item.Rating}");
+                        Console.WriteLine($"{item.Name} {item.Description} {item.Price}");
+                        Console.WriteLine();
                     }
                 }
             }
@@ -138,15 +137,8 @@ namespace marketplace.Domain.Repsositories
                 if (seller.Email == sellerEmail)
                 {
                     if (seller.Products.Count == 0)
-                    {
-                        Console.WriteLine("Prodavac nema proizvode.");
-                        Console.ReadKey();
                         return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    
                 }
             }
             return false; 
@@ -218,6 +210,28 @@ namespace marketplace.Domain.Repsositories
                 }
             }
             Console.WriteLine($"Ukupan profit u periodu od {dateFrom} do {dateTo} je {Math.Round(profitSum,2)}");
+            Console.ReadKey();
+        }
+
+        public static void ChangePriceOfProduct(string sellerEmail, Guid productID, double newPrice)
+        {
+            foreach (var seller in Seed.Sellers)
+            {
+                if (seller.Email == sellerEmail)
+                {
+                    foreach (var item in seller.Products)
+                    {
+                        if (item.Id == productID)
+                        {
+                            item.Price = newPrice;
+                            Console.WriteLine("Cijena proizvoda je promjenjena.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Proizvod nije pronadjen.");
             Console.ReadKey();
         }
     }

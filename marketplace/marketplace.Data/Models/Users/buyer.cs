@@ -11,6 +11,7 @@ namespace marketplace.Data.Models.Users
     {
         public double currentBalance { get; set; }
         public List<Items.Items> ItemsBought { get; set; }
+        public List<Items.Items> HistoryOfItemsBought { get; set; }
         public List<Items.Items> FavouriteItems { get; set; }
 
         public List<Coupons.Coupons> Coupons { get; set; }
@@ -19,6 +20,7 @@ namespace marketplace.Data.Models.Users
         {
             currentBalance = balance;
             ItemsBought = new List<Items.Items>();
+            HistoryOfItemsBought = new List<Items.Items>();
             FavouriteItems = new List<Items.Items>();
             Coupons = new List<Coupons.Coupons>();
         }
