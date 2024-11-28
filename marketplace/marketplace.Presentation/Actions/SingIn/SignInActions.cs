@@ -132,7 +132,7 @@ namespace marketplace.Presentation.Actions.SingIn
                     }
                 }   
             }
-            Console.WriteLine($"Registracija uspjesno napravljena.\nKreiran kupac:{registrationName}   {registrationEmail}   {registrationBalance}");
+            Console.WriteLine($"Registracija uspjesno napravljena.\nKreiran kupac:{registrationName}   {registrationEmail}   {Math.Round(registrationBalance,2)}");
             Console.ReadKey();
 
             Domain.Repsositories.BuyerRepository.AddBuyer(registrationName, registrationEmail, registrationBalance);

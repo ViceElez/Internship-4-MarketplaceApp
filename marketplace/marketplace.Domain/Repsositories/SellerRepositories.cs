@@ -41,40 +41,12 @@ namespace marketplace.Domain.Repsositories
             Seed.Sellers.Add(newSeller);
         }
 
-        public static bool CheckIfProductExists(string itemName,string sellerEmail)
-        {
-            var foundProduct= false;
-            foreach (var seller in Seed.Sellers)
-            {
-                if (seller.Email == sellerEmail)
-                {
-                    foreach (var item in seller.Products)
-                    {
-                        if (item.Name.ToLower() == itemName.ToLower())
-                        {
-                            foundProduct = true;
-                            return true;
-                        }
-                    }
-                }
-            }
-            if(!foundProduct)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
-        }
-
-        public static void AddingProduct(string sellerEmail, string prdouctName,string productDescription, float productPrice, string productCategory )
+        public static void AddingProduct(string sellerEmail, string prdouctName,string productDescription, double productPrice, string productCategory )
         {
             Items newItem = new Items(prdouctName, productDescription, productPrice, productCategory, Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail));
             Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail).Products.Add(newItem);
             Console.WriteLine("Uspjesno dodan novi proizvod:");
-            Console.WriteLine($"{prdouctName} {productDescription} {newItem.Status} {productPrice} {productCategory} {newItem.SellerOfItem.Name} {newItem.Rating} ");
+            Console.WriteLine($"{prdouctName} {productDescription} {newItem.Status} {Math.Round(productPrice,2)} {productCategory} {newItem.SellerOfItem.Name} {newItem.Rating} ");
             Console.ReadKey();
         }
 
@@ -104,22 +76,16 @@ namespace marketplace.Domain.Repsositories
 
         }
 
-        public static float TotalProfitForSeller(string sellerEmail)
+        public static double TotalProfitForSeller(string sellerEmail)
         {
-            var profitSum = 0.00f;
+            var profitSum = 0.00d;
             var foundItems = false;
             foreach(var seller in Seed.Sellers)
             {
                 if(seller.Email == sellerEmail)
                 {
-                    foreach(var items in seller.Products)
-                    {
-                        if (items.Status == "prodano")
-                        {
-                            profitSum += items.Price;
-                        }
-                        foundItems = true;
-                    }
+
+                    return seller.currentProfit;
                 }
             }
             if (!foundItems)
@@ -137,6 +103,7 @@ namespace marketplace.Domain.Repsositories
                 {
                     foreach(var item in seller.Products)
                     {
+                        if(item.Category.ToLower().Trim() == inputedCategory.ToLower().Trim() && item.Status == "prodano")
                         Console.WriteLine($"{item.Name} {item.Description} {item.Price} {item.Rating}");
                     }
                 }
@@ -227,13 +194,13 @@ namespace marketplace.Domain.Repsositories
                         }
                     }
                 }
-            return false;
+            return true;
         }
 
         public static void ProfitInCertainTime(string sellerEmail, DateTime dateFrom, DateTime dateTo)
         {
             Console.Clear();
-            var profitSum = 0.00f;
+            var profitSum = 0.00d;
             var sellerID= Guid.Empty;
             foreach (var seller in Seed.Sellers)
             {
@@ -249,7 +216,7 @@ namespace marketplace.Domain.Repsositories
                     profitSum += transaction.Amount;
                 }
             }
-            Console.WriteLine($"Ukupan profit u periodu od {dateFrom} do {dateTo} je {profitSum}");
+            Console.WriteLine($"Ukupan profit u periodu od {dateFrom} do {dateTo} je {Math.Round(profitSum,2)}");
             Console.ReadKey();
         }
     }

@@ -13,18 +13,9 @@ namespace marketplace.Data.Models.Transactions
         public Guid TransactionSellerID { get; set; }
         public Guid TransactionBuyerID { get; set; }
         public DateTime DateOfTransaction { get; set; }
-        public float Amount { get; set; }
+        public double Amount { get; set; }
 
-        public Transactions(Guid sellerID, Guid buyerID, float amount)
-        {
-            IdOfItem = Guid.NewGuid();
-            TransactionSellerID = sellerID;
-            TransactionBuyerID = buyerID;
-            DateOfTransaction = DateTime.Now;
-            Amount = amount;
-        }
-
-        public Transactions(Guid idOfItem, Guid sellerID, Guid buyerID, DateTime dateOfTransaction, float amount)
+        public Transactions(Guid idOfItem, Guid sellerID, Guid buyerID, DateTime dateOfTransaction, double amount)
         {
             IdOfItem = idOfItem;
             TransactionSellerID = sellerID;

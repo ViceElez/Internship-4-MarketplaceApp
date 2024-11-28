@@ -68,7 +68,6 @@ namespace marketplace.Presentation.Actions.SellerMenu
             Console.Clear();
             Console.Write("Upisite ime proizvoda:");
             var productName = Console.ReadLine().Trim();
-            var nameOfProductExists = SellerRepositories.CheckIfProductExists(productName, sellerEmail);
             while (true)
             {
                 if (string.IsNullOrEmpty(productName))
@@ -87,23 +86,6 @@ namespace marketplace.Presentation.Actions.SellerMenu
                         return;
                     }
                 }
-                else if (nameOfProductExists)
-                {
-                    Console.WriteLine("Proizvod vec postoji.");
-                    var confirmForName = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
-                    if (confirmForName)
-                    {
-                        Console.Write("Upisite ime proizvoda:");
-                        productName = Console.ReadLine().Trim();
-                        nameOfProductExists = SellerRepositories.CheckIfProductExists(productName, sellerEmail);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Proces dodavanja proizvoda je prekinut.");
-                        Console.ReadKey();
-                        return;
-                    }
-                }
                 else
                 {
                     break;
@@ -114,7 +96,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
             var productDescription = Console.ReadLine().Trim();
 
             Console.Write("Upisite cijenu proizvoda:");
-            var inputForPrice = float.TryParse(Console.ReadLine(), out float productPrice);
+            var inputForPrice = double.TryParse(Console.ReadLine(), out double productPrice);
             while (true)
             {
                 if (productPrice >= 0 && inputForPrice)
@@ -128,7 +110,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
                     if (confirmForBalance)
                     {
                         Console.Write("Upisite cijenu proizvoda:");
-                        inputForPrice = float.TryParse(Console.ReadLine(), out productPrice);
+                        inputForPrice = double.TryParse(Console.ReadLine(), out productPrice);
                     }
                     else
                     {
@@ -144,7 +126,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
                     if (confirmForBalance)
                     {
                         Console.Write("Upisite cijenu proizvoda:");
-                        inputForPrice = float.TryParse(Console.ReadLine(), out productPrice);
+                        inputForPrice = double.TryParse(Console.ReadLine(), out productPrice);
                     }
                     else
                     {
@@ -192,7 +174,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
             if(sellersProfit<0)
                 Console.WriteLine("Lista proizvoda je prazna");
             else
-                Console.WriteLine($"Totalna zarada je: {sellersProfit}");
+                Console.WriteLine($"Totalna zarada je: {Math.Round(sellersProfit,2)}");
             Console.ReadKey();  
         }
 
@@ -209,6 +191,8 @@ namespace marketplace.Presentation.Actions.SellerMenu
             {
                 if (Domain.Repsositories.SellerRepositories.CheckIfStatusSoldForCategoryIsEmpty(sellerEmail)){
                     Console.WriteLine("Nema prodanih proizvoda");
+                    Console.ReadKey();
+                    return;
                 }
                 Domain.Repsositories.SellerRepositories.ListAllCategoriesOfProducts(sellerEmail);
                 Console.Write("Upisite za koju kategoriju zelite vidjeti proizvode: ");
@@ -269,7 +253,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
             else
             {
                 Console.WriteLine("Upisite datum od i do kada zelite vidjeti zaradu:");
-                Console.Write("Datum od(dd/mm/yyyy):");
+                Console.Write("Datum od(mm/dd/yyyy):");
                 var inputForDateFrom = DateTime.TryParse(Console.ReadLine(), out DateTime dateFrom);
                 while (true)
                 {
@@ -279,11 +263,11 @@ namespace marketplace.Presentation.Actions.SellerMenu
                     }
                     else
                     {
-                        Console.WriteLine("Molimo vas unesite datum u formatu dd/mm/yyyy");
+                        Console.WriteLine("Molimo vas unesite datum u formatu (mm/dd/yyyy)");
                         var confirmForDateFrom = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
                         if (confirmForDateFrom)
                         {
-                            Console.Write("Datum od:");
+                            Console.Write("Datum od(mm/dd/yyyy):");
                             inputForDateFrom = DateTime.TryParse(Console.ReadLine(), out dateFrom);
                         }
                         else
@@ -294,7 +278,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
                         }
                     }
                 }
-                Console.Write("Datum do(dd/mm/yyyy):");
+                Console.Write("Datum do(mm/dd/yyyy):");
                 var inputForDateTo = DateTime.TryParse(Console.ReadLine(), out DateTime dateTo);
                 while (true)
                 {
@@ -304,11 +288,11 @@ namespace marketplace.Presentation.Actions.SellerMenu
                     }
                     else
                     {
-                        Console.WriteLine("Molimo vas unesite datum u formatu dd/mm/yyyy");
+                        Console.WriteLine("Molimo vas unesite datum u formatu (mm/dd/yyyy)");
                         var confirmForDateTo = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
                         if (confirmForDateTo)
                         {
-                            Console.Write("Datum do:");
+                            Console.Write("Datum do(mm/dd/yyyy):");
                             inputForDateTo = DateTime.TryParse(Console.ReadLine(), out dateTo);
                         }
                         else

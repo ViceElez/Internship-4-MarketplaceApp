@@ -8,10 +8,10 @@ namespace marketplace.Data.Models.Users
 {
     public class seller:User
     {
-        public float currentProfit { get; set; }
+        public double currentProfit { get; set; }
         public List<Items.Items> Products { get; set; }
 
-        public seller(string name, string email, float profit) : base(name, email)
+        public seller(string name, string email, double profit) : base(name, email)
         {
             currentProfit = profit;
             Products = new List<Items.Items>();
@@ -20,7 +20,7 @@ namespace marketplace.Data.Models.Users
         public seller(string name, string email):base(name,email)
         {
 
-            currentProfit = 0;
+            currentProfit = 0.00d;
             Products = new List<Items.Items>();
         }
     }

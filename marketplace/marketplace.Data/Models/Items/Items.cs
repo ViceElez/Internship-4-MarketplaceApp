@@ -12,13 +12,13 @@ namespace marketplace.Data.Models.Items
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public float Price { get; set; }
+        public double Price { get; set; }
         public string Status { get; set; }
         public string Category { get; set; }
         public seller SellerOfItem { get; set; }
         public float Rating { get; set; }
 
-        public Items(string name,string description,float price, string category, seller seller)
+        public Items(string name,string description,double price, string category, seller seller)
         {
             Id = Guid.NewGuid();
             Name = name;
@@ -30,7 +30,7 @@ namespace marketplace.Data.Models.Items
             Rating = 0.00f;
         }
 
-        public Items(string name, string description, float price, string status, string category, seller sellerOfItem, float rating)
+        public Items(string name, string description, double price, string status, string category, seller sellerOfItem, float rating)
         {
             Id =Guid.NewGuid();
             Name = name;

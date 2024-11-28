@@ -9,11 +9,11 @@ namespace marketplace.Data.Models.Users
 {
     public class buyer:User
     {
-        public float currentBalance { get; set; }
+        public double currentBalance { get; set; }
         public List<Items.Items> ItemsBought { get; set; }
         public List<Items.Items> FavouriteItems { get; set; }
 
-       public buyer(string name, string email,float balance): base(name, email)
+       public buyer(string name, string email,double balance): base(name, email)
         {
             currentBalance = balance;
             ItemsBought = new List<Items.Items>();
