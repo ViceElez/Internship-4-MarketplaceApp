@@ -45,6 +45,7 @@ namespace marketplace.Domain.Repsositories
         {
             Items newItem = new Items(prdouctName, productDescription, productPrice, productCategory, Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail));
             Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail).Products.Add(newItem);
+            Seed.Items.Add(newItem);
             Console.WriteLine("Uspjesno dodan novi proizvod:");
             Console.WriteLine($"{prdouctName} {productDescription} {newItem.Status} {Math.Round(productPrice,2)} {productCategory} {newItem.SellerOfItem.Name} {newItem.Rating} ");
             Console.ReadKey();

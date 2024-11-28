@@ -29,17 +29,5 @@ namespace marketplace.Data.Models.Items
             SellerOfItem = seller;
             Rating = 0.00f;
         }
-
-        public Items(string name, string description, double price, string status, string category, seller sellerOfItem, float rating)
-        {
-            Id =Guid.NewGuid();
-            Name = name;
-            Description = description;
-            Price = price;
-            Status = status;
-            Category = category;
-            SellerOfItem = sellerOfItem;
-            Rating = rating;
-        }
     }
 }

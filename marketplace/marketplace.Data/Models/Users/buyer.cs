@@ -13,11 +13,14 @@ namespace marketplace.Data.Models.Users
         public List<Items.Items> ItemsBought { get; set; }
         public List<Items.Items> FavouriteItems { get; set; }
 
-       public buyer(string name, string email,double balance): base(name, email)
+        public List<Coupons.Coupons> Coupons { get; set; }
+
+        public buyer(string name, string email,double balance): base(name, email)
         {
             currentBalance = balance;
             ItemsBought = new List<Items.Items>();
             FavouriteItems = new List<Items.Items>();
+            Coupons = new List<Coupons.Coupons>();
         }
         
     }
