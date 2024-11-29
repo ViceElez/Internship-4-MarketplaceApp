@@ -26,6 +26,7 @@ namespace marketplace.Data.Models.Items
             Status = "na prodaju";
             Category = category;
             SellerOfItem = seller;
+            seller.Products.Add(this);
         }
     }
 }

@@ -34,6 +34,28 @@ namespace marketplace.Domain.Repsositories
                 return null;
             }
         }
+
+        public static double FindingBuyerByEmailAndReturningBalance(string buyerEmail)
+        {
+            var foundBuyer = false;
+            foreach (buyer buyer in Seed.Buyers)
+            {
+                if (buyer.Email == buyerEmail)
+                {
+                    foundBuyer = true;
+                    return buyer.currentBalance;
+                }
+            }
+            if (!foundBuyer)
+            {
+                return 0;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public static void AddBuyer(string buyerName, string buyerEmail, float buyerBalance)
         {
             buyer newBuyer = new buyer(buyerName, buyerEmail, buyerBalance);
@@ -80,7 +102,7 @@ namespace marketplace.Domain.Repsositories
                     if (product.Status == "na prodaju")
                     {
                         Console.WriteLine($"Id proizvoda:{product.Id}\nIme proizvoda: {product.Name}\n" +
-                       $"Cijena: {product.Price}\nOpis: {product.Description}\n");
+                       $"Cijena: {product.Price}\nKategorija:{product.Category}\nOpis: {product.Description}\n");
                         foundProducts = true;
                     }
 
@@ -96,20 +118,21 @@ namespace marketplace.Domain.Repsositories
         public static void BuyingProduct(string emailOfLoggedUser, Guid idOfLookingItem)
         {
             var foundProduct = false;
-            foreach (var seller in Seed.Sellers)  
+            foreach (var seller in Seed.Sellers)
             {
                 foreach (var item in seller.Products)
                 {
                     if (idOfLookingItem == item.Id)
                     {
                         foundProduct = true;
-                        if (item.Price <= Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance && item.Status=="na prodaju")
+                        var buyer = Seed.Buyers.Find(b => b.Email == emailOfLoggedUser);
+                        if (item.Price <= buyer.currentBalance && item.Status == "na prodaju")
                         {
                             if (DoesBuyerHaveCoupons(emailOfLoggedUser))
                             {
-                                foreach (var coupon in Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).Coupons)
+                                foreach (var coupon in buyer.Coupons)
                                 {
-                                    if (item.Category.ToLower().Trim() == coupon.Category.ToLower().Trim())
+                                    if (item.Category.ToLower().Trim() == coupon.Category.ToLower().Trim() && coupon.ExpirationDate > DateTime.Now)
                                     {
                                         var answer = string.Empty;
                                         while (true)
@@ -119,16 +142,15 @@ namespace marketplace.Domain.Repsositories
 
                                             if (answer == "da")
                                             {
-                                                var discount = item.Price * (coupon.Discount/100);
+                                                var discount = item.Price * (coupon.Discount / 100);
                                                 var payment = item.Price - discount;
-                                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance -= payment;
+                                                buyer.currentBalance -= payment;
                                                 seller.currentProfit += payment * 0.95;
-                                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ItemsBought.Add(item);
-                                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).HistoryOfItemsBought.Add(item);
-                                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).Coupons.Remove(coupon);
+                                                buyer.ItemsBought.Add(item);
+                                                buyer.HistoryOfItemsBought.Add(item);
+                                                buyer.Coupons.Remove(coupon);
                                                 item.Status = "prodano";
-                                                Transactions newTransactionWithCoupon = new Transactions(idOfLookingItem, seller.ID, 
-                                                    Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, payment);
+                                                Transactions newTransactionWithCoupon = new Transactions(idOfLookingItem, seller.ID, buyer.ID, DateTime.Now, payment);
                                                 Seed.Transactions.Add(newTransactionWithCoupon);
                                                 Console.WriteLine("Proizvod je uspjesno kupljen.");
                                                 Console.ReadKey();
@@ -136,19 +158,35 @@ namespace marketplace.Domain.Repsositories
                                             }
                                             else if (answer == "ne")
                                             {
-                                                break;
+                                                buyer.currentBalance -= item.Price;
+                                                seller.currentProfit += item.Price * 0.95;
+                                                buyer.ItemsBought.Add(item);
+                                                buyer.HistoryOfItemsBought.Add(item);
+                                                item.Status = "prodano";
+                                                Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, buyer.ID, DateTime.Now, item.Price);
+                                                Seed.Transactions.Add(newTransaction);
+                                                Console.WriteLine("Proizvod je uspjesno kupljen.");
+                                                Console.ReadKey();
+                                                return;
                                             }
                                             else
                                             {
                                                 Console.WriteLine("Krivi unos.");
                                             }
                                         }
-                                        Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance -= item.Price;
+                                    }
+                                    else
+                                    {
+                                        if (item.Price >= 100)
+                                        {
+                                            GiveOutARandomCoupon(emailOfLoggedUser);
+                                        }
+                                        buyer.currentBalance -= item.Price;
                                         seller.currentProfit += item.Price * 0.95;
-                                        Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ItemsBought.Add(item);
-                                        Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).HistoryOfItemsBought.Add(item);
+                                        buyer.ItemsBought.Add(item);
+                                        buyer.HistoryOfItemsBought.Add(item);
                                         item.Status = "prodano";
-                                        Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, item.Price);
+                                        Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, buyer.ID, DateTime.Now, item.Price);
                                         Seed.Transactions.Add(newTransaction);
                                         Console.WriteLine("Proizvod je uspjesno kupljen.");
                                         Console.ReadKey();
@@ -162,12 +200,12 @@ namespace marketplace.Domain.Repsositories
                                 {
                                     GiveOutARandomCoupon(emailOfLoggedUser);
                                 }
-                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).currentBalance -= item.Price;
+                                buyer.currentBalance -= item.Price;
                                 seller.currentProfit += item.Price * 0.95;
-                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ItemsBought.Add(item);
-                                Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).HistoryOfItemsBought.Add(item);
+                                buyer.ItemsBought.Add(item);
+                                buyer.HistoryOfItemsBought.Add(item);
                                 item.Status = "prodano";
-                                Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, Seed.Buyers.Find(b => b.Email == emailOfLoggedUser).ID, DateTime.Now, item.Price);
+                                Transactions newTransaction = new Transactions(idOfLookingItem, seller.ID, buyer.ID, DateTime.Now, item.Price);
                                 Seed.Transactions.Add(newTransaction);
                                 Console.WriteLine("Proizvod je uspjesno kupljen.");
                                 Console.ReadKey();
@@ -238,6 +276,7 @@ namespace marketplace.Domain.Repsositories
                             buyer.currentBalance += transactionToRemove.Amount*0.8;
                             item.Status = "na prodaju";
                             buyer.ItemsBought.Remove(item);
+                            buyer.FavouriteItems.Remove(item);
                             var seller = Seed.Sellers.Find(s => s.ID == item.SellerOfItem.ID);
                             seller.currentProfit -= transactionToRemove.Amount * 0.85;
 
@@ -252,12 +291,12 @@ namespace marketplace.Domain.Repsositories
                         }
                     }
                 }
-                if (!foundProduct)
-                {
-                    Console.WriteLine("Proizvod s tim id-om nije pronadjen.");
-                    Console.ReadKey();
-                    return;
-                }
+            }
+            if (!foundProduct)
+            {
+                Console.WriteLine("Proizvod s tim id-om nije pronadjen.");
+                Console.ReadKey();
+                return;
             }
         }
 
@@ -271,6 +310,12 @@ namespace marketplace.Domain.Repsositories
                     {
                         if (item.Id == idOfLookingItem)
                         {
+                            if(buyer.FavouriteItems.Contains(item))
+                            {
+                                Console.WriteLine("Proizvod je vec dodan u listu omiljenih.");
+                                Console.ReadKey();
+                                return;
+                            }
                             buyer.FavouriteItems.Add(item);
                             Console.WriteLine("Proizvod je uspjesno dodan u listu omiljenih.");
                             Console.ReadKey();
@@ -306,6 +351,25 @@ namespace marketplace.Domain.Repsositories
             }
         }
 
+        public static void ListtAllProductsNotOnFavoriteList(string emailOfLoggedUser)
+        {
+            foreach (var buyer in Seed.Buyers)
+            {
+                if (buyer.Email == emailOfLoggedUser)
+                {
+                    foreach (var item in buyer.ItemsBought)
+                    {
+                            if (!buyer.FavouriteItems.Contains(item))
+                            {
+                            Console.WriteLine($"Id proizvoda:{item.Id}\nIme proizvoda: {item.Name}\n" +
+                             $"Cijena: {item.Price}\nOpis: {item.Description}\n");
+                            Console.WriteLine();
+                            }
+                    }
+                }
+            }
+        }
+
         public static bool DoesBuyerHaveFavouriteProducts(string emailOfLoggedUser)
         {
             foreach (var buyer in Seed.Buyers)
@@ -320,7 +384,7 @@ namespace marketplace.Domain.Repsositories
             }
             return false;
         }
-
+        
         public static bool DoesBuyerHaveCoupons(string emailOfLoggedUser)
         {
             foreach (var buyer in Seed.Buyers)
@@ -370,6 +434,21 @@ namespace marketplace.Domain.Repsositories
                     {
                         Console.WriteLine($"Id proizvoda:{item.Id}\nIme proizvoda: {item.Name}\n" +
                        $"Cijena: {item.Price}\nOpis: {item.Description}\n");
+                        Console.WriteLine();
+                    }
+                }
+            }
+        }
+
+        public static void ListAllCoupons(string emailOfLoggesUser)
+        {
+            foreach (var buyer in Seed.Buyers)
+            {
+                if (buyer.Email == emailOfLoggesUser)
+                {
+                    foreach (var coupon in buyer.Coupons)
+                    {
+                        Console.WriteLine($"Kategorija: {coupon.Category}\nPopust: {coupon.Discount}\nDatum isteka: {coupon.ExpirationDate}");
                         Console.WriteLine();
                     }
                 }

@@ -9,19 +9,22 @@ namespace marketplace.Presentation.Actions.BuyerMenu
 {
     public class BuyerMenuActions
     {
-        //isporbaj jos s kuponima sve
+       
        
         public static void MenuForBuyer(string emailOfLoggedUser)
         {
             var nameOfLoggedUser = BuyerRepository.FindingBuyerByEmail(emailOfLoggedUser);
+           
             var menuForBuyer = true;
             while (menuForBuyer)
             {
                 Console.Clear();
-                Console.WriteLine($"\t\t Dobrodosli {nameOfLoggedUser}\n\n");
+                var ballanceOfLoggedUser = BuyerRepository.FindingBuyerByEmailAndReturningBalance(emailOfLoggedUser);
+                Console.WriteLine($"\t\t Dobrodosli {nameOfLoggedUser}\n");
+                Console.WriteLine($"\t Stanje na vasem racunu je:{ballanceOfLoggedUser}\n");
                 Console.WriteLine("1 - Pregled svih dostupnih proizvoda \n2 - Kupovina proizvoda\n3 - Povratak kupljenih proizvoda\n" +
                     "4 - Dodavanje proizvoda u listu omiljenih\n5 - Pregled liste omiljenih proizvoda\n" +
-                    "6 - Pregled kupljenih proizvoda\n7 - Izlazak s racuna");
+                    "6 - Pregled kupljenih proizvoda\n7 - Uvid u kupone\n8 - Izlazak s racuna");
                 Console.Write("Vas odabir:");
                 var validInputForMenu = int.TryParse(Console.ReadLine(), out int choiceForBuyer);
                 switch (choiceForBuyer)
@@ -57,6 +60,11 @@ namespace marketplace.Presentation.Actions.BuyerMenu
                             break;
                         }
                     case 7:
+                        {
+                            ListAllCoupons(emailOfLoggedUser);
+                            break;
+                        }
+                    case 8:
                         {
                             menuForBuyer = false;
                             break;
@@ -108,11 +116,13 @@ namespace marketplace.Presentation.Actions.BuyerMenu
             {
                 Console.WriteLine("Nema dostupnih proizvoda.");
                 Console.ReadKey();
+                return;
             }
             else
             {
                 Console.WriteLine("Nema prodavaca.");
                 Console.ReadKey();
+                return;
             }
 
         }
@@ -156,33 +166,44 @@ namespace marketplace.Presentation.Actions.BuyerMenu
             Console.Clear();
             if (Domain.Repsositories.BuyerRepository.DoesBuyerHaveProducts(emailOfLoggedUser))
             {
-                Console.WriteLine("Liste dostupnih proizvoda za dodavanje u listu omiljenih:");
-                Domain.Repsositories.BuyerRepository.ListAllBuyersProducts(emailOfLoggedUser);
-                Console.Write("Unesite ID proizvoda kojeg zelite dodati u listu omiljenih:");
-                var validInputForId = Guid.TryParse(Console.ReadLine(), out var idOfProduct);
-                while (!validInputForId)
+                if (!Domain.Repsositories.BuyerRepository.DoesBuyerHaveFavouriteProducts(emailOfLoggedUser))
                 {
-                    Console.WriteLine("Krivi unos.");
-                    var confirmForId = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
-                    if (confirmForId)
+                    Console.WriteLine("Liste dostupnih proizvoda za dodavanje u listu omiljenih:");
+                    Domain.Repsositories.BuyerRepository.ListtAllProductsNotOnFavoriteList(emailOfLoggedUser);
+                    Console.Write("Unesite ID proizvoda kojeg zelite dodati u listu omiljenih:");
+                    var validInputForId = Guid.TryParse(Console.ReadLine(), out var idOfProduct);
+                    while (!validInputForId)
                     {
-                        Console.Write("Unesite ID proizvoda koji zelite kupiti:");
-                        validInputForId = Guid.TryParse(Console.ReadLine(), out idOfProduct);
+                        Console.WriteLine("Krivi unos.");
+                        var confirmForId = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForId)
+                        {
+                            Console.Write("Unesite ID proizvoda koji zelite kupiti:");
+                            validInputForId = Guid.TryParse(Console.ReadLine(), out idOfProduct);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces kupovine je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine("Proces kupovine je prekinut.");
-                        Console.ReadKey();
-                        return;
-                    }
+                    Domain.Repsositories.BuyerRepository.AddingItemToFavourite(emailOfLoggedUser, idOfProduct);
                 }
-                Domain.Repsositories.BuyerRepository.AddingItemToFavourite(emailOfLoggedUser, idOfProduct);
+                else
+                {
+                    Console.WriteLine("Nema ne favoriziranih proizvoda.");
+                    Console.ReadKey();
+                }
             }
+
             else
             {
                 Console.WriteLine("Nema kupljenih proizvoda.");
                 Console.ReadKey();
+                return;
             }
+            
         }
 
         public static void ListAllFavouriteProducts(string emailOfLoggedUser)
@@ -221,6 +242,22 @@ namespace marketplace.Presentation.Actions.BuyerMenu
             else
             {
                 Console.WriteLine("Nema kupljenih proizvoda.");
+                Console.ReadKey();
+            }
+        }
+
+        public static void ListAllCoupons(string emailOfLoggedUser)
+        {
+            Console.Clear();
+            if (Domain.Repsositories.BuyerRepository.DoesBuyerHaveCoupons(emailOfLoggedUser))
+            {
+                Console.WriteLine("Lista svih kupona u vasem vlasnistvu:");
+                Domain.Repsositories.BuyerRepository.ListAllCoupons(emailOfLoggedUser);
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("Nemate kupona.");
                 Console.ReadKey();
             }
         }

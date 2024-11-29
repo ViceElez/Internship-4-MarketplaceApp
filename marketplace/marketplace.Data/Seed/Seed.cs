@@ -28,11 +28,12 @@ namespace marketplace.Data.Seed
        };
         public static readonly List<Models.Items.Items> Items = new List<Models.Items.Items>()
         {
-            new Items("Laptop", "High-end gaming laptop", 1500.0, "Electronics", Sellers[0]),
-             new Items("Smartphone", "Latest model smartphone", 800.0, "Electronics",Sellers[3] ),
-            new Items("Desk Chair", "Ergonomic office chair", 120.0, "Furniture", Sellers[2]),
-            new Items("Headphones", "Noise-cancelling headphones", 200.0, "Electronics", Sellers[1]),
-            new Items("Coffee Maker", "Automatic coffee machine", 100.0, "Appliances",Sellers[0] )
+            new Items("Laptop", "High-end gaming laptop", 1500.0, "Elektronika", Sellers[0]),
+             new Items("Mobitel", "Latest model smartphone", 800.0, "Elektronika",Sellers[3] ),
+            new Items("Stolica", "Ergonomic office chair", 120.0, "Namjestaj", Sellers[2]),
+            new Items("Masina za robu", "", 200.0, "Aparati", Sellers[1]),
+            new Items("Jaketa", "", 100.0, "Odjeca",Sellers[0] ),
+            new Items("Jabuka", "",5.0,"Namirnice",Sellers[1])
         };
 
 
@@ -40,11 +41,11 @@ namespace marketplace.Data.Seed
 
         public static readonly List<Models.Coupons.Coupons> Coupons = new List<Models.Coupons.Coupons>()
         {
-            new Coupons("Elektronika", 10.0, new DateTime(2024, 12, 31)), 
-            new Coupons("Namjestaj", 15.0, new DateTime(2024, 11, 30)),   
+            new Coupons("Elektronika", 10.0, new DateTime(2025, 12, 31)), 
+            new Coupons("Namjestaj", 15.0, new DateTime(2025, 11, 30)),   
             new Coupons("Aparati", 20.0, new DateTime(2025, 1, 15)),      
-            new Coupons("Namirnice", 5.0, new DateTime(2024, 12, 25)),    
-            new Coupons("Odjeća", 25.0, new DateTime(2024, 11, 30))
+            new Coupons("Namirnice", 5.0, new DateTime(2025, 12, 25)),    
+            new Coupons("Odjeca", 25.0, new DateTime(2025, 11, 30))
         };
 
 

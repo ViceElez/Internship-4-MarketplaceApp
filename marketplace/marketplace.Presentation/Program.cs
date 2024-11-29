@@ -11,6 +11,8 @@ namespace marketplace.Presentation
     {
         static void Main(string[] args)
         {
+            Console.SetBufferSize(Console.WindowWidth, Console.WindowHeight);
+
             string decorativeLine = new string('-', 30);
             Console.WriteLine(decorativeLine);
             Console.WriteLine("\tDOBRODOSLI");

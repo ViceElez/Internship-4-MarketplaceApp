@@ -41,21 +41,24 @@ namespace marketplace.Domain.Repsositories
             Seed.Sellers.Add(newSeller);
         }
 
-        public static void AddingProduct(string sellerEmail, string prdouctName,string productDescription, double productPrice, string productCategory )
+        public static void AddingProduct(string sellerEmail, string productName, string productDescription, double productPrice, string productCategory)
         {
-            Items newItem = new Items(prdouctName, productDescription, productPrice, productCategory, Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail));
-            Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail).Products.Add(newItem);
-            Seed.Items.Add(newItem);
-            Console.WriteLine("Uspjesno dodan novi proizvod:");
-            Console.WriteLine($"{prdouctName} {productDescription}  {Math.Round(productPrice,2)}  {productCategory} {newItem.SellerOfItem.Name} ");
+            var seller = Seed.Sellers.FirstOrDefault(x => x.Email == sellerEmail);
+            if (seller != null)
+            {
+                Items newItem = new Items(productName, productDescription, productPrice, productCategory, seller);
+                Seed.Items.Add(newItem);
+                Console.WriteLine("Uspjesno dodan novi proizvod:");
+                Console.WriteLine($"{productName} {productDescription} {Math.Round(productPrice, 2)} {productCategory} {newItem.SellerOfItem.Name}");
+            }
             Console.ReadKey();
         }
 
         public static void ViewAllProductsInPossesion(string sellerEmail) 
         {
             var foundItems = false;
-            foreach (var seller in Seed.Sellers)
-            {
+            var seller = Seed.Sellers.FirstOrDefault(s => s.Email == sellerEmail);
+            
                 if (seller.Email == sellerEmail)
                 {
                     foreach (var item in seller.Products)
@@ -66,7 +69,6 @@ namespace marketplace.Domain.Repsositories
                         Console.WriteLine();
                     }
                 }
-            }
             if(!foundItems)
             {
                 Console.WriteLine("Nemate proizvoda u posjedu.");
@@ -221,7 +223,7 @@ namespace marketplace.Domain.Repsositories
                 {
                     foreach (var item in seller.Products)
                     {
-                        if (item.Id == productID)
+                        if (item.Id == productID && item.Status=="na prodaju")
                         {
                             item.Price = newPrice;
                             Console.WriteLine("Cijena proizvoda je promjenjena.");
@@ -233,6 +235,25 @@ namespace marketplace.Domain.Repsositories
             }
             Console.WriteLine("Proizvod nije pronadjen.");
             Console.ReadKey();
+        }
+
+        public static void ListAllProductsThatAreOnSale(string sellerEmail)
+        {
+            Console.Clear();
+            foreach (var seller in Seed.Sellers)
+            {
+                if (seller.Email == sellerEmail)
+                {
+                    foreach (var item in seller.Products)
+                    {
+                        if (item.Status == "na prodaju")
+                        {
+                            Console.WriteLine($"{item.Id} {item.Name} {item.Description} {item.Price}");
+                            Console.WriteLine();
+                        }
+                    }
+                }
+            }
         }
     }
 }

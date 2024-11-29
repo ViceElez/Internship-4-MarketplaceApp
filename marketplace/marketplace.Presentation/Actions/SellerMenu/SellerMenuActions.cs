@@ -191,6 +191,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
             if (Domain.Repsositories.SellerRepositories.CheckIfListOfProductsIsEmpty(sellerEmail))
             {
                 Console.WriteLine("Prodavac nema proizvoda.");
+                Console.ReadKey();
                 return;
             }
             else
@@ -255,6 +256,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
             if (Domain.Repsositories.SellerRepositories.CheckIfListOfProductsIsEmpty(sellerEmail))
             {
                 Console.WriteLine("Prodavac nema proizvoda.");
+                Console.ReadKey();
                 return;
             }
             else
@@ -264,7 +266,23 @@ namespace marketplace.Presentation.Actions.SellerMenu
                 var inputForDateFrom = DateTime.TryParse(Console.ReadLine(), out DateTime dateFrom);
                 while (true)
                 {
-                    if (inputForDateFrom)
+                    if (dateFrom > DateTime.Now)
+                    {
+                        Console.WriteLine("Datum pocetka gledanja nemoze biti veci od trenutnog");
+                        var confirmForDateFrom = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForDateFrom)
+                        {
+                            Console.Write("Datum od(mm/dd/yyyy):");
+                            inputForDateFrom = DateTime.TryParse(Console.ReadLine(), out dateFrom);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces pregleda zarade u odredenom vremenskom razdoblju je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                    else if (inputForDateFrom)
                     {
                         break;
                     }
@@ -289,7 +307,23 @@ namespace marketplace.Presentation.Actions.SellerMenu
                 var inputForDateTo = DateTime.TryParse(Console.ReadLine(), out DateTime dateTo);
                 while (true)
                 {
-                    if (inputForDateTo)
+                    if (dateTo < dateFrom)
+                    {
+                        Console.WriteLine("Datum kraja gledanja nemoze biti veci od datuma pocetka gledanja");
+                        var confirmForDateTo = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                        if (confirmForDateTo)
+                        {
+                            Console.Write("Datum do(mm/dd/yyyy):");
+                            inputForDateTo = DateTime.TryParse(Console.ReadLine(), out dateTo);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Proces pregleda zarade u odredenom vremenskom razdoblju je prekinut.");
+                            Console.ReadKey();
+                            return;
+                        }
+                    }
+                    else if (inputForDateFrom)
                     {
                         break;
                     }
@@ -312,7 +346,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
                 }
                 Domain.Repsositories.SellerRepositories.ProfitInCertainTime(sellerEmail, dateFrom, dateTo);
             }
-        }//nezeli radit
+        }
 
         public static void ChangePriceOfProduct(string sellerEmail)
         {
@@ -327,7 +361,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
             }
             else
             {
-                Domain.Repsositories.SellerRepositories.ViewAllProductsInPossesion(sellerEmail);
+                Domain.Repsositories.SellerRepositories.ListAllProductsThatAreOnSale(sellerEmail);
                 Console.Write("Upisite ID proizvoda kojem zelite zamijeniti cijenu:");
                 var validInputForId = Guid.TryParse(Console.ReadLine(), out  idOfProduct);
                 while (true)
