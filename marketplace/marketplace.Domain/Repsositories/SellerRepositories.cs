@@ -49,7 +49,9 @@ namespace marketplace.Domain.Repsositories
                 Items newItem = new Items(productName, productDescription, productPrice, productCategory, seller);
                 Seed.Items.Add(newItem);
                 Console.WriteLine("Uspjesno dodan novi proizvod:");
-                Console.WriteLine($"{productName} {productDescription} {Math.Round(productPrice, 2)} {productCategory} {newItem.SellerOfItem.Name}");
+                Console.WriteLine($"Ime: {productName}\nOpis: {productDescription}\n" +
+                    $"Cijena: {Math.Round(productPrice, 2)}\nKategorija: {productCategory}\n" +
+                    $"Ime prodavaca:{newItem.SellerOfItem.Name}");
             }
             Console.ReadKey();
         }
@@ -105,7 +107,7 @@ namespace marketplace.Domain.Repsositories
                     foreach(var item in seller.Products)
                     {
                         if(item.Category.ToLower().Trim() == inputedCategory.ToLower().Trim() && item.Status == "prodano")
-                        Console.WriteLine($"{item.Name} {item.Description} {item.Price}");
+                        Console.WriteLine($"Ime proizvoda:{item.Name}\nOpis proizvoda: {item.Description}\nCijena proizvoda: {item.Price}");
                         Console.WriteLine();
                     }
                 }
@@ -124,7 +126,7 @@ namespace marketplace.Domain.Repsositories
                         {
                             if (!listedCategories.Contains(item.Category.ToLower().Trim()) && item.Status=="prodano")
                             {
-                                Console.WriteLine($"{item.Category}");
+                                Console.WriteLine($"Kategorija:{item.Category}");
                                 listedCategories.Add(item.Category.ToLower().Trim());
                             }
                         }
@@ -211,7 +213,7 @@ namespace marketplace.Domain.Repsositories
                     profitSum += transaction.Amount;
                 }
             }
-            Console.WriteLine($"Ukupan profit u periodu od {dateFrom} do {dateTo} je {Math.Round(profitSum,2)}");
+            Console.WriteLine($"Ukupan profit u periodu od {dateFrom} do {dateTo} je: {Math.Round(profitSum,2)}");
             Console.ReadKey();
         }
 
@@ -248,7 +250,7 @@ namespace marketplace.Domain.Repsositories
                     {
                         if (item.Status == "na prodaju")
                         {
-                            Console.WriteLine($"{item.Id} {item.Name} {item.Description} {item.Price}");
+                            Console.WriteLine($"Id: {item.Id}\nIme: {item.Name}\nOpis: {item.Description}\nCijena: {item.Price}");
                             Console.WriteLine();
                         }
                     }

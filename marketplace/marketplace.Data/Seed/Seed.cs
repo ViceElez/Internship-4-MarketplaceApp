@@ -45,7 +45,19 @@ namespace marketplace.Data.Seed
             new Coupons("Namjestaj", 15.0, new DateTime(2025, 11, 30)),   
             new Coupons("Aparati", 20.0, new DateTime(2025, 1, 15)),      
             new Coupons("Namirnice", 5.0, new DateTime(2025, 12, 25)),    
-            new Coupons("Odjeca", 25.0, new DateTime(2025, 11, 30))
+            new Coupons("Odjeca", 25.0, new DateTime(2025, 11, 30)),
+            new Coupons("Igracke", 10.0, new DateTime(2025, 6, 30)),
+            new Coupons("Knjige", 20.0, new DateTime(2025, 9, 15)),
+            new Coupons("Sport", 12.5, new DateTime(2025, 8, 20)),
+            new Coupons("Kozmetika", 18.0, new DateTime(2025, 7, 5)),
+            new Coupons("Auto dijelovi", 8.0, new DateTime(2025, 10, 10)),
+            new Coupons("Tehnologija", 30.0, new DateTime(2025, 12, 1)),
+            new Coupons("Kucni ljubimci", 5.0, new DateTime(2025, 3, 1)),
+            new Coupons("Zdravlje", 15.0, new DateTime(2025, 5, 15)),
+            new Coupons("Putovanja", 25.0, new DateTime(2025, 11, 20)),
+            new Coupons("Alati", 10.0, new DateTime(2025, 4, 10)),
+            new Coupons("Nakiti", 22.0, new DateTime(2025, 12, 10)),
+            new Coupons("Usluge", 7.5, new DateTime(2025, 2, 28)),
         };
 
 
