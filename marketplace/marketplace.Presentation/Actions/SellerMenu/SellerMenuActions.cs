@@ -102,29 +102,14 @@ namespace marketplace.Presentation.Actions.SellerMenu
 
             Console.Write("Upisite cijenu proizvoda:");
             var inputForPrice = double.TryParse(Console.ReadLine(), out double productPrice);
+
             while (true)
             {
-                if (productPrice >= 0 && inputForPrice)
+                if (inputForPrice && productPrice > 0)
                 {
                     break;
                 }
-                else if (productPrice < 0)
-                {
-                    Console.WriteLine("Molimo vas unesite pozitivan iznos.");
-                    var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
-                    if (confirmForBalance)
-                    {
-                        Console.Write("Upisite cijenu proizvoda:");
-                        inputForPrice = double.TryParse(Console.ReadLine(), out productPrice);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Proces dodavanja proizvoda je prekinut.");
-                        Console.ReadKey();
-                        return;
-                    }
-                }
-                else
+                else if (!inputForPrice)
                 {
                     Console.WriteLine("Molimo vas unesite brojcanu vrijednost.");
                     var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
@@ -140,7 +125,24 @@ namespace marketplace.Presentation.Actions.SellerMenu
                         return;
                     }
                 }
+                else if (productPrice <= 0)
+                {
+                    Console.WriteLine("Molimo vas unesite iznos veci od 0.");
+                    var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                    if (confirmForBalance)
+                    {
+                        Console.Write("Upisite cijenu proizvoda:");
+                        inputForPrice = double.TryParse(Console.ReadLine(), out productPrice);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Proces dodavanja proizvoda je prekinut.");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
             }
+
 
             Console.Write("Upisite kategoriju proizvoda:");
             var productCategory = Console.ReadLine().Trim();
@@ -163,8 +165,7 @@ namespace marketplace.Presentation.Actions.SellerMenu
 
             Domain.Repsositories.SellerRepositories.AddingProduct(sellerEmail, productName, productDescription, productPrice, productCategory);
             Console.WriteLine("Uspjesno dodan prozivod");
-            Console.WriteLine($"Detalji dodanog prozivoda su:"); //dodaj porukeda se nesto dodalo i ispsisi to stase dodalo ne samo za ovo nego i  za sve ostalo
-        }
+      }
 
         public static void ViewAllProductsInPossesion(string sellerEmail)
         {

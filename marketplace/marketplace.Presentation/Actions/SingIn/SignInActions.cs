@@ -91,31 +91,16 @@ namespace marketplace.Presentation.Actions.SingIn
                 }
             }
 
-            Console.Write("Unesite iznos koji zelite da vam bude na racunu:");
+            Console.Write("Unesite iznos koji zelite da vam bude na računu:");
             var inputForCurrentBalance = float.TryParse(Console.ReadLine(), out var registrationBalance);
+
             while (true)
             {
-                if(registrationBalance >= 0 && inputForCurrentBalance)
+                if (inputForCurrentBalance && registrationBalance > 0)
                 {
                     break;
                 }
-                else if(registrationBalance < 0)
-                {
-                    Console.WriteLine("Molimo vas unesite pozitivan iznos.");
-                    var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
-                    if (confirmForBalance)
-                    {
-                        Console.Write("Unesite iznos koji zelite da vam bude na racunu:");
-                        inputForCurrentBalance = float.TryParse(Console.ReadLine(), out registrationBalance);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Proces registracije je prekinut.");
-                        Console.ReadKey();
-                        return;
-                    }
-                }
-                else
+                else if (!inputForCurrentBalance)
                 {
                     Console.WriteLine("Molimo vas unesite brojcanu vrijednost.");
                     var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
@@ -130,8 +115,25 @@ namespace marketplace.Presentation.Actions.SingIn
                         Console.ReadKey();
                         return;
                     }
-                }   
+                }
+                else if (registrationBalance <= 0)
+                {
+                    Console.WriteLine("Molimo vas unesite iznos veći od 0.");
+                    var confirmForBalance = Helper.ChecksIfInputIsValid.ConfirmAndDelete();
+                    if (confirmForBalance)
+                    {
+                        Console.Write("Unesite iznos koji želite da vam bude na računu:");
+                        inputForCurrentBalance = float.TryParse(Console.ReadLine(), out registrationBalance);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Proces registracije je prekinut.");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
             }
+
             Console.WriteLine($"Registracija uspjesno napravljena.\nKreiran kupac:{registrationName}   {registrationEmail}   {Math.Round(registrationBalance,2)}");
             
             Domain.Repsositories.BuyerRepository.AddBuyer(registrationName, registrationEmail, registrationBalance);
